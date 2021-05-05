@@ -6,7 +6,8 @@ const ctx = canvas.getContext("2d");
 const snake = new Snake(ctx);
 const food = new Food(ctx);
 const increaseSpeed = 0.2;
-let moveSpeed = 5;
+const speedFactor = 4;
+let moveSpeed = 4;
 let direction = 'right';
 
 food.updatePos(canvas.width, canvas.height, moveSpeed)
@@ -18,7 +19,7 @@ function draw() {
 
     if(tookFood()){
         snake.tailLength++;
-        moveSpeed+=increaseSpeed;
+        if(moveSpeed%speedFactor === 0) moveSpeed+=increaseSpeed;
         food.updatePos(canvas.width, canvas.height, moveSpeed);
     }
 

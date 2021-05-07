@@ -5,10 +5,11 @@ canvas.style.background = 'black';
 const ctx = canvas.getContext("2d");
 const snake = new Snake(ctx);
 const food = new Food(ctx);
-const increaseSpeed = 0.2;
-const speedFactor = 4;
-let moveSpeed = 4;
+const increaseSpeed = 0.05;
+const maxSpeed = 20;
+let moveSpeed = 6;
 let direction = 'right';
+let score = 0;
 
 food.updatePos(canvas.width, canvas.height, moveSpeed)
 keyboardSetDetection();
@@ -16,33 +17,37 @@ draw();
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+    
     if(tookFood()){
+        score++;
         snake.tailLength++;
-        if(moveSpeed%speedFactor === 0) moveSpeed+=increaseSpeed;
+        if(moveSpeed <= maxSpeed) moveSpeed+=increaseSpeed;
         food.updatePos(canvas.width, canvas.height, moveSpeed);
     }
-
+    
+    addText();
     noGameOver();
-
     snake.draw();
     food.draw();
-
     updatePosition();
 
     window.requestAnimationFrame(draw);
 }
 
+function addText(){
+    ctx.fillStyle = "grey";
+    ctx.font = "50px Arial";
+    ctx.textAlign = 'center'
+    ctx.fillText("<H4R5/>", canvas.width/2, canvas.height/2);
+    ctx.font = "30px Arial";
+    ctx.fillText(`Score : ${score}`, canvas.width/2, canvas.height/2+ 50);
+}
 
 function tookFood() {
     return (snake.x < food.x + food.w &&
    snake.x + snake.w > food.x &&
    snake.y < food.y + food.h &&
    snake.y + snake.h > food.y)
-}
-
-function isGameOver() {
-    return snake.x > canvas.width - snake.w - moveSpeed || snake.x < moveSpeed || snake.y > canvas.height - snake.h - moveSpeed || snake.y < moveSpeed;
 }
 
 function noGameOver(){
